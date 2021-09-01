@@ -143,10 +143,10 @@ def test_ar_model():
     exogdf = pd.DataFrame(
     [
         [1, 16, 25, 2, 2],
-        [4, 64, 100, 1, 1]
+        # [4, 64, 100, 1, 1]
     ],
     columns = ['exog11', 'exog12', 'exog13', 'exog21', 'exog22'],
-    index = ['2021-05', '2021-06']
+    index = ['2021-05']
     )
 
     exogdf.index = pd.to_datetime(exogdf.index)
@@ -156,15 +156,18 @@ def test_ar_model():
             'total': ['target1', 'target2']
             }
     exogenous = {
-            'target1': ['exog11', 'exog12', 'exog13'],
+            'target1': ['exog11', 'exog12'],
             'target2': ['exog21', 'exog22']
         }
     
-    print(dummydf)
-    # ht = HierarchyTree.from_nodes(hier, dummydf, exogenous=exogenous)
-    htsmodel = regressor.HTSRegressor(model = 'auto_arima', revision_method = 'BU', n_jobs = 0)
+    print(exogdf)
+    ht = HierarchyTree.from_nodes(hier, dummydf, exogenous=exogenous)
+    from collections import namedtuple
+    Transform = namedtuple('Transform', ['func', 'inv_func'])
+    sqrtTransformation = Transform(func=numpy.sqrt, inv_func=numpy.square)
+    htsmodel = regressor.HTSRegressor(model = 'auto_arima', revision_method = 'PHA', n_jobs = 0, transform = sqrtTransformation)
     htsfit = htsmodel.fit(dummydf, hier, exogenous = exogenous) 
     print("fitting completed\n")
-    pred = htsfit.predict(steps_ahead = 2, exogenous_df=exogdf)
+    pred = htsfit.predict(steps_ahead = 5, exogenous_df=exogdf)
     print(pred)
     return "DONE"

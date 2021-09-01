@@ -370,6 +370,7 @@ class HTSRegressor(BaseEstimator, RegressorMixin):
         try:
             start = self.nodes.item.index[-1] + timedelta(freq)
             end = self.nodes.item.index[-1] + timedelta(steps_ahead * freq)
+            print('start ', start, 'end ', end)
             future = pandas.date_range(start=start, end=end)
         except TypeError:
             start = self.nodes.item.index[-1] + freq

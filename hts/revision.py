@@ -67,7 +67,8 @@ class RevisionMethod(object):
         elif self.name in [MethodT.AHP.name, MethodT.PHA.name]:
             if self.transformer:
                 for node in make_iterable(nodes, prop=None):
-                    node.item[node.key] = self.transformer.inverse_transform(
+                    print('revision line 70 ', self.transformer)
+                    node.item[node.key] = self.transformer.inv_func(
                         node.item[node.key]
                     )
             y_hat = proportions(
